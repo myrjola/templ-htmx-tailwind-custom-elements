@@ -19,7 +19,9 @@
 !LICENSE
 !tailwind.config.js
 !input.css
-!static/main.css
+!static/*
+!bundle.css
+
 
 # !Makefile
 

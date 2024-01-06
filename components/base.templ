@@ -9,9 +9,12 @@ templ Base() {
         <meta http-equiv="X-UA-Compatible" content="ie=edge" />
         <title>Templ example</title>
         <link rel="stylesheet" href="/static/main.css" />
+        <script type="module" src="/static/bundle.js"></script>
       </head>
       <body>
-          @Counter("counter1", 2)
+          @Counter("counter1", 1)
+          @Counter("counter2", 2)
+          @Counter("counter3", 3)
       </body>
     </html>
 }

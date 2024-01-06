@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/a-h/templ"
-	"github.com/github.com/myrjola/templ-htmx-tailwind-custom-elements/components"
+	"github.com/myrjola/templ-htmx-tailwind-custom-elements/components"
 	"log"
 	"net/http"
 )
