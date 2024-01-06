@@ -1,0 +1,45 @@
+package components
+
+import (
+    "strconv"
+)
+
+var CounterElement = CustomElement{
+    Style: `
+        my-counter:defined input {
+           display: none;
+        }`,
+    Script: `
+        window.customElements.define("my-counter", class extends HTMLElement {
+            connectedCallback() {
+                const tmpl = this.querySelector("template");
+                tmpl.replaceWith(tmpl.content);
+
+                const btn = this.querySelector("button");
+                const output = this.querySelector("output");
+                const input = this.querySelector("input");
+
+                let value = parseInt(output.innerText);
+                btn.addEventListener("click", () => {
+                     value++;
+                     output.innerText = value;
+                     input.value = value;
+                })
+            }
+        })`,
+}
+
+templ Counter(name string, value int) {
+    if uid := shortUID(); true {
+        <my-counter>
+            <input type="number" id={uid} name={name} value={strconv.Itoa(value)} />
+            <template>
+                @PrimaryButton(templ.Attributes{"type": "button"}) {
+                    Add
+                }
+                <output for={uid}>{strconv.Itoa(value)}</output>
+            </template>
+        </my-counter>
+    }
+}
+
