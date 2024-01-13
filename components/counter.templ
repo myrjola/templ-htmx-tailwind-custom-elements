@@ -9,19 +9,30 @@ var CounterElement = CustomElement{
         my-counter:defined input {
            display: none;
         }`,
+    // language=JavaScript
     Script: `
         window.customElements.define("my-counter", class extends HTMLElement {
             connectedCallback() {
                 const tmpl = this.querySelector("template");
                 tmpl.replaceWith(tmpl.content);
 
-                const btn = this.querySelector("button");
+                const incrementBtn = this.querySelector("button[aria-label=increment]");
+                const decrementBtn = this.querySelector("button[aria-label=decrement]");
                 const output = this.querySelector("output");
                 const input = this.querySelector("input");
 
                 let value = parseInt(output.innerText);
-                btn.addEventListener("click", () => {
-                     value++;
+                incrementBtn.addEventListener("click", () => {
+                     if (input.max > value) {
+                         value++;
+                     }
+                     output.innerText = value;
+                     input.value = value;
+                })
+                decrementBtn.addEventListener("click", () => {
+                     if (input.min < value) {
+                         value--;
+                     }
                      output.innerText = value;
                      input.value = value;
                 })
@@ -32,13 +43,18 @@ var CounterElement = CustomElement{
 templ Counter(name string, value int) {
     if uid := shortUID(); true {
         <my-counter>
-            <input type="number" id={uid} name={name} value={strconv.Itoa(value)} />
-            <template>
-                @PrimaryButton(templ.Attributes{"type": "button"}) {
-                    Add
-                }
-                <output for={uid}>{strconv.Itoa(value)}</output>
-            </template>
+            <div class="flex rounded border border-gray-500 w-min overflow-hidden">
+                <input type="number" id={uid} name={name} value={strconv.Itoa(value)} min="0" max="9" />
+                <template>
+                    @PrimaryButton(templ.Attributes{"type": "button", "aria-label": "decrement", "class": "!rounded-none"}) {
+                        -
+                    }
+                    <output class="block w-8 flex items-center justify-center" for={uid}>{strconv.Itoa(value)}</output>
+                    @PrimaryButton(templ.Attributes{"type": "button", "aria-label": "increment", "class": "!rounded-none"}) {
+                        +
+                    }
+                </template>
+            </div>
         </my-counter>
     }
 }

@@ -19,19 +19,30 @@ var CounterElement = CustomElement{
         my-counter:defined input {
            display: none;
         }`,
+	// language=JavaScript
 	Script: `
         window.customElements.define("my-counter", class extends HTMLElement {
             connectedCallback() {
                 const tmpl = this.querySelector("template");
                 tmpl.replaceWith(tmpl.content);
 
-                const btn = this.querySelector("button");
+                const incrementBtn = this.querySelector("button[aria-label=increment]");
+                const decrementBtn = this.querySelector("button[aria-label=decrement]");
                 const output = this.querySelector("output");
                 const input = this.querySelector("input");
 
                 let value = parseInt(output.innerText);
-                btn.addEventListener("click", () => {
-                     value++;
+                incrementBtn.addEventListener("click", () => {
+                     if (input.max > value) {
+                         value++;
+                     }
+                     output.innerText = value;
+                     input.value = value;
+                })
+                decrementBtn.addEventListener("click", () => {
+                     if (input.min < value) {
+                         value--;
+                     }
                      output.innerText = value;
                      input.value = value;
                 })
@@ -53,7 +64,7 @@ func Counter(name string, value int) templ.Component {
 		}
 		ctx = templ.ClearChildren(ctx)
 		if uid := shortUID(); true {
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<my-counter><input type=\"number\" id=\"")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<my-counter><div class=\"flex rounded border border-gray-500 w-min overflow-hidden\"><input type=\"number\" id=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -77,7 +88,7 @@ func Counter(name string, value int) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\"><template>")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" min=\"0\" max=\"9\"><template>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -87,7 +98,7 @@ func Counter(name string, value int) templ.Component {
 					templ_7745c5c3_Buffer = templ.GetBuffer()
 					defer templ.ReleaseBuffer(templ_7745c5c3_Buffer)
 				}
-				templ_7745c5c3_Var3 := `Add`
+				templ_7745c5c3_Var3 := `-`
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var3)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
@@ -97,11 +108,11 @@ func Counter(name string, value int) templ.Component {
 				}
 				return templ_7745c5c3_Err
 			})
-			templ_7745c5c3_Err = PrimaryButton(templ.Attributes{"type": "button"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = PrimaryButton(templ.Attributes{"type": "button", "aria-label": "decrement", "class": "!rounded-none"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<output for=\"")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<output class=\"block w-8 flex items-center justify-center\" for=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -116,13 +127,37 @@ func Counter(name string, value int) templ.Component {
 			var templ_7745c5c3_Var4 string
 			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(strconv.Itoa(value))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/counter.templ`, Line: 39, Col: 54}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/counter.templ`, Line: 51, Col: 109}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</output></template></my-counter>")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</output>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Var5 := templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
+				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
+				if !templ_7745c5c3_IsBuffer {
+					templ_7745c5c3_Buffer = templ.GetBuffer()
+					defer templ.ReleaseBuffer(templ_7745c5c3_Buffer)
+				}
+				templ_7745c5c3_Var6 := `+`
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var6)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				if !templ_7745c5c3_IsBuffer {
+					_, templ_7745c5c3_Err = io.Copy(templ_7745c5c3_W, templ_7745c5c3_Buffer)
+				}
+				return templ_7745c5c3_Err
+			})
+			templ_7745c5c3_Err = PrimaryButton(templ.Attributes{"type": "button", "aria-label": "increment", "class": "!rounded-none"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var5), templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</template></div></my-counter>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
