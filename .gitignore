@@ -21,6 +21,7 @@
 !input.css
 !static/*
 !bundle.css
+!start_dev_server.sh
 
 
 # !Makefile
